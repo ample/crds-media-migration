@@ -10,4 +10,8 @@ class Migrate
     @export = Export.new
   end
 
+  def perform
+    @import.run(@export.series)
+  end
+
 end

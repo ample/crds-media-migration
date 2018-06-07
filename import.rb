@@ -1,20 +1,24 @@
 require 'httparty'
+require 'dotenv/load'
 
 class Import
   include HTTParty
 
-  base_uri 'www.crossroads.net/proxy/content/api/'
+  attr_accessor :space_id
+
+  base_uri 'cdn.contentful.com'
 
   def initialize()
-    @options = { }
+    @space_id = ENV['CONTENTFUL_SPACE_ID']
   end
 
-  def series
-
+  def create_entry(json)
+    self.class.post("/spaces/#{@space_id}/entries", { body: json })
   end
 
-  private
-    def get_series
-      self.class.get('/series', @options)
+  def run(arr)
+    arr.each do | entry |
+      create_entry(entry)
     end
+  end
 end
