@@ -4,6 +4,8 @@ require 'irb'
 require 'irb/completion'
 require 'pry'
 
-require_relative '../lib/media-migration'
+require 'contentful/management'
+
+require_relative '../lib/migrator'
 
 IRB.start
