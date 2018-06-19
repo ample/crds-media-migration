@@ -6,22 +6,14 @@ class Series < Transformer
             description: 'description',
             starts_at: 'startDate',
             ends_at: 'endDate',
-            something_else: nil
+            published_at: nil
 
   # TODO: Create associated messages/videos first and then finish creating this
   # series.
 
-  # TODO: Parse HTML to markdown for description.
-
-  # TODO: Revise field map so:
-  #
-  #   - string --> field value
-  #   - :symbol --> method name
-  #   - { proc(?) } --> processes on demand
-
-  # def transformed_slug
-  #   attributes[:title].parameterize
-  # end
+  def transformed_slug
+    attributes[:title].parameterize
+  end
 
   def transformed_description
     html_to_markdown(attributes[:description])
@@ -29,12 +21,11 @@ class Series < Transformer
 
   def transformed_image
     binding.pry
-    raise '---'
     Importer.create_asset(attributes[:image][:filename])
   end
 
-  def transformed_something_else
-    binding.pry
+  def transformed_published_at
+    DateTime.now
   end
 
 end
