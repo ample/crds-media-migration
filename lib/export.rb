@@ -6,7 +6,7 @@ class Export
   base_uri 'www.crossroads.net/proxy/content/api/'
 
   def initialize()
-    @options = { }
+    @options = {}
   end
 
   def series
@@ -29,7 +29,9 @@ class Export
   end
 
   private
-    def get_series
-      self.class.get('/series', @options)
-    end
+
+  def get_series
+    self.class.get('/series', @options) # ['series']
+  end
+
 end

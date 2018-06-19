@@ -2,9 +2,10 @@ require 'httparty'
 require 'dotenv/load'
 
 class Import
+
   include HTTParty
 
-  attr_accessor :space_id
+  attr_reader :space_id
 
   base_uri 'cdn.contentful.com'
 
@@ -13,7 +14,7 @@ class Import
   end
 
   def create_entry(json)
-    self.class.post("/spaces/#{@space_id}/entries", { body: json })
+    self.class.post("/spaces/#{space_id}/entries", { body: json })
   end
 
   def run(arr)
@@ -21,4 +22,5 @@ class Import
       create_entry(entry)
     end
   end
+
 end

@@ -1,5 +1,5 @@
-require 'import'
-require 'export'
+require_relative 'export'
+require_relative 'import'
 
 class Migrate
 

@@ -1,4 +1,6 @@
 source "https://rubygems.org"
 
-gem 'httparty'
+gem 'contentful-management'
 gem 'dotenv'
+gem 'httparty'
+gem 'pry'
