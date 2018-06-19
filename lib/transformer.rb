@@ -1,6 +1,6 @@
 require 'active_support/all'
 
-require_relative '../lib/importer'
+require_relative 'importer'
 
 class Transformer
 
