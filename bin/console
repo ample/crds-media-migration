@@ -2,17 +2,8 @@
 
 require 'irb'
 require 'irb/completion'
-
-require 'dotenv/load'
-
 require 'pry'
 
-require 'contentful/management'
-
-lib_dir = File.expand_path('../lib', __dir__)
-Dir.glob("#{lib_dir}/**/*.rb").each do |f|
-  require_relative f.chomp('.rb').gsub(lib_dir, '../lib')
-  require_relative f.gsub(lib_dir, '../lib')
-end
+require_relative '../lib/media-migration'
 
 IRB.start

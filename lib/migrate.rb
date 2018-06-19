@@ -1,17 +1,17 @@
-require_relative 'export'
-require_relative 'import'
+# require_relative 'export'
+# require_relative 'import'
 
-class Migrate
+# class Migrate
 
-  attr_accessor :import, :export
+#   attr_accessor :import, :export
 
-  def initialize()
-    @import = Import.new
-    @export = Export.new
-  end
+#   def initialize()
+#     @import = Import.new
+#     @export = Export.new
+#   end
 
-  def perform
-    @import.run(@export.series)
-  end
+#   def perform
+#     @import.run(@export.series)
+#   end
 
-end
+# end

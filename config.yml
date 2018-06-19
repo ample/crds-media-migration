@@ -1,0 +1,4 @@
+series:
+  fields:
+    title: title
+    slug_123: slug
