@@ -36,7 +36,8 @@ class Transformer
 
   def import!
     transform! if importable_data.blank?
-    Importer.create_entry(content_type, importable_data)
+    entry = Importer.create_entry(content_type, importable_data)
+    entry.publish
   end
 
 end
