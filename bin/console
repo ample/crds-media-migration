@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 
+require 'contentful/management'
 require 'irb'
 require 'irb/completion'
 require 'pry'
-
-require 'contentful/management'
 
 require_relative '../lib/migrator'
 

@@ -1,22 +1,41 @@
-require 'hashie'
+require 'active_support/all'
 
 class Transformer
 
-  def self.transform(data, config)
-    transformed_data = []
+  class << self
+    attr_reader :fields
 
-    data.each do |obj|
-      obj = Hashie::Mash.new(obj)
-      new_obj = {}
-
-      config.each do |k, v|
-        new_obj[k] = obj.send(v)
-      end
-
-      transformed_data << new_obj
+    def field_map(map = {})
+      @fields = map.symbolize_keys
     end
+  end
 
-    transformed_data
+  attr_accessor :attributes, :importable_data, :content_type
+
+  def initialize(attributes = {})
+    @attributes = attributes.deep_symbolize_keys
+    @importable_data = {}
+    @content_type = self.class.name.singularize.underscore
+  end
+
+  def field_map
+    self.class.fields
+  end
+
+  def transform!
+    field_map.each { |k,v| send("transform_#{k}") }
+  end
+
+  def import!
+    transform! if importable_data.blank?
+    Importer.create_entry(content_type, importable_data)
+  end
+
+  def method_missing(m, *args, &block)
+    super unless m.to_s.start_with?('transform_')
+    dest_field = m.to_s.remove('transform_').to_sym
+    src_field = field_map[dest_field].to_sym
+    self.importable_data[dest_field] = attributes[src_field]
   end
 
 end

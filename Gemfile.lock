@@ -17,7 +17,6 @@ GEM
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.4.0)
-    hashie (3.5.7)
     http (2.2.2)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
@@ -54,7 +53,6 @@ DEPENDENCIES
   activesupport
   contentful-management
   dotenv
-  hashie
   httparty
   pry
 

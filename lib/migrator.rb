@@ -2,6 +2,8 @@ require_relative 'exporter'
 require_relative 'importer'
 require_relative 'transformer'
 
+require_relative '../models/series'
+
 class Migrator
 
   # attr_accessor :name
@@ -14,15 +16,22 @@ class Migrator
     # @name ||= name
     # raise ArgumentError.new("Missing required attribute: name") if name.blank?
 
-    series = Exporter.get_entries('/series')
+    series_data = Exporter.get_entries('/series')
 
-    field_map = {
-      title: 'title',
-      slug_abc: 'slug'
-    }
-    data = Transformer.transform(series, field_map)
+    series = Series.new(series_data.first)
+    series.transform!
+    series.import!
 
-    Importer.create_entry('series', data.first)
+    # all_series = series_data.map { |data| Series.new(data) }
+    # series = all_series.first
+
+    # field_map = {
+    #   title: 'title',
+    #   slug_abc: 'slug'
+    # }
+    # data = Transformer.transform(series, field_map)
+
+    # Importer.create_entry('series', data.first)
   end
 
 end
