@@ -1,5 +1,7 @@
 require 'active_support/all'
 
+require_relative '../lib/importer'
+
 class Transformer
 
   class << self

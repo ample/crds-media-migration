@@ -1,16 +1,8 @@
 require_relative 'exporter'
-require_relative 'importer'
-require_relative 'transformer'
 
 require_relative '../models/series'
 
 class Migrator
-
-  # attr_accessor :name
-
-  # def initialize(name = nil)
-  #   @name = name
-  # end
 
   def self.migrate # (name = nil)
     # @name ||= name
