@@ -14,6 +14,7 @@ class Migrator
 
     series = Series.new(series_data.first)
     series.transform!
+    # binding.pry
     series.import!
 
     # all_series = series_data.map { |data| Series.new(data) }

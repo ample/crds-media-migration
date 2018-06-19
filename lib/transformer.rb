@@ -8,7 +8,11 @@ class Transformer
     attr_reader :fields
 
     def field_map(map = {})
-      @fields = map.symbolize_keys
+      (@fields = map.symbolize_keys).each do |k,v|
+        self.class_eval do
+          define_method("transformed_#{k}") { attributes[v.try(:to_sym)] }
+        end
+      end
     end
   end
 
@@ -25,19 +29,14 @@ class Transformer
   end
 
   def transform!
-    field_map.each { |k,v| send("transform_#{k}") }
+    field_map.each do |k,v|
+      self.importable_data[k] = send("transformed_#{k}")
+    end
   end
 
   def import!
     transform! if importable_data.blank?
     Importer.create_entry(content_type, importable_data)
-  end
-
-  def method_missing(m, *args, &block)
-    super unless m.to_s.start_with?('transform_')
-    dest_field = m.to_s.remove('transform_').to_sym
-    src_field = field_map[dest_field].to_sym
-    self.importable_data[dest_field] = attributes[src_field]
   end
 
 end
