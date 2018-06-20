@@ -19,7 +19,8 @@ class Importer
       title = File.basename(url, '.*').titleize
       asset = env.assets.create(title: title, file: image_file)
       asset.process_file
-      asset.publish
+      # asset.publish
+      asset
     end
 
     private
