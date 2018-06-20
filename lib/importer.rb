@@ -23,6 +23,11 @@ class Importer
       asset
     end
 
+    def delete_drafts
+      env.entries.all.reject(&:published?).map(&:destroy)
+      env.assets.all.reject(&:published?).map(&:destroy)
+    end
+
     private
 
     def client
