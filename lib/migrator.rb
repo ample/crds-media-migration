@@ -9,10 +9,15 @@ require_relative '../models/video'
 class Migrator
 
   def self.migrate
-    series_data = Exporter.get_entries('/series')
-    series = Series.new(series_data.first)
-    series.transform!
-    series.import!
+    # series_data = Exporter.get_entries('/series')
+    # series = Series.new(series_data.first)
+    # series.transform!
+    # series.import!
+
+    videos_data = Exporter.get_entries('/videos')
+    video = Video.new(videos_data.first)
+    video.transform!
+    video.import!
   end
 
 end

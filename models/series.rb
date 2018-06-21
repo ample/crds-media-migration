@@ -46,7 +46,7 @@ class Series < Transformer
 
     video = Video.new(
       title: "#{attributes[:title]} (Trailer)",
-      image: importable_data[:image],
+      still: importable_data[:image],
       source_url: attributes[:trailerLink],
       published_at: importable_data[:published_at]
     )
