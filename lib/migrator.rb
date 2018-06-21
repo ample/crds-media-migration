@@ -3,6 +3,7 @@ require_relative 'importer'
 require_relative 'transformer'
 
 require_relative '../models/message'
+require_relative '../models/song'
 require_relative '../models/series'
 require_relative '../models/video'
 
@@ -14,10 +15,15 @@ class Migrator
     # series.transform!
     # series.import!
 
-    videos_data = Exporter.get_entries('/videos')
-    video = Video.new(videos_data.first)
-    video.transform!
-    video.import!
+    # videos_data = Exporter.get_entries('/videos')
+    # video = Video.new(videos_data.first)
+    # video.transform!
+    # video.import!
+
+    music_data = Exporter.get_entries('/music')
+    song = Song.new(music_data.first)
+    song.transform!
+    song.import!
   end
 
 end
