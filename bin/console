@@ -7,8 +7,8 @@ require 'pry'
 
 require_relative '../lib/migrator'
 
-def go
-  Migrator.migrate
-end
+# def go
+#   Migrator.migrate
+# end
 
 IRB.start

@@ -37,7 +37,9 @@ class Transformer
   def import!
     transform! if importable_data.blank?
     entry = Importer.create_entry(content_type, importable_data)
-    # entry.publish
+    entry.publish
+    sleep 0.15
+    entry
   end
 
   def html_to_markdown(html)

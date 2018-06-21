@@ -19,13 +19,14 @@ class Importer
       title = File.basename(url, '.*').titleize
       asset = env.assets.create(title: title, file: image_file)
       asset.process_file
-      # asset.publish
+      asset.publish
+      sleep 0.15
       asset
     end
 
     def delete_drafts
-      env.entries.all.reject(&:published?).map(&:destroy)
-      env.assets.all.reject(&:published?).map(&:destroy)
+      env.entries.all.reject(&:published?).map { |e| e.destroy; sleep 0.15 }
+      env.assets.all.reject(&:published?).map { |e| e.destroy; sleep 0.15 }
     end
 
     private
