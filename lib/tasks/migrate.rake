@@ -1,5 +1,9 @@
 task :migrate do
-  Migrator.migrate(:series)
+  Migrator.migrate(
+    '/series' => 'Series',
+    '/videos' => 'Video',
+    '/music' => 'Song'
+  )
 end
 
 task :delete_drafts do

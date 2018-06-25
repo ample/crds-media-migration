@@ -18,7 +18,9 @@ class Importer
       image_file.properties[:upload] = url
       title = File.basename(url, '.*').titleize
       asset = env.assets.create(title: title, file: image_file)
+      sleep 0.15
       asset.process_file
+      sleep 0.15
       asset.publish
       Logger.write('.', :blue)
       sleep 0.15

@@ -11,11 +11,11 @@ require_relative '../models/video'
 
 class Migrator
 
-  def self.migrate(*models)
+  def self.migrate(models = {})
     Redirector.purge!
-    models.each do |model|
-      Exporter.get_entries("/#{model.to_s.downcase.pluralize}").first(10).each do |data|
-        obj = model.to_s.classify.constantize.new(data)
+    models.each do |endpoint, class_name|
+      Exporter.get_entries(endpoint).first(10).each do |data|
+        obj = class_name.constantize.new(data)
         obj.transform!
         obj.import!
         obj.write_redirect!

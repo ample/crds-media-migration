@@ -37,6 +37,7 @@ class Transformer
   def import!
     transform! if importable_data.blank?
     entry = Importer.create_entry(content_type, importable_data)
+    sleep 0.15
     entry.publish
     Logger.write('.', :green)
     sleep 0.15
