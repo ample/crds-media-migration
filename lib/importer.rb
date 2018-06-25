@@ -38,7 +38,12 @@ class Importer
     end
 
     def unpublish_content
-      raise '123'
+      collection = env.entries.all.to_a.reject { |e| e.fields[:title].blank? } + env.assets.all.to_a
+      collection.reject(&:published?).each do |obj|
+        obj.unpublish
+        Logger.write('.', :green)
+        sleep 0.15
+      end
     end
 
     private

@@ -6,6 +6,10 @@ task :migrate do
   )
 end
 
-task :delete_drafts do
+task :delete do
   Importer.delete_drafts
+end
+
+task :unpublish do
+  Importer.unpublish_content
 end
