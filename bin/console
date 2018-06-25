@@ -9,7 +9,13 @@ require 'fileutils'
 require_relative '../lib/migrator'
 
 def reload!
-  load File.expand_path('../lib/migrator.rb', __dir__)
+  root_dir = File.expand_path('..', __dir__)
+
+  %w[lib models].each do |dir|
+    Dir.glob("#{root_dir}/#{dir}/**/*.rb").each { |f| load(f) }
+  end
+
+  true
 end
 
 IRB.start

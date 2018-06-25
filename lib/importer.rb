@@ -37,6 +37,10 @@ class Importer
       end
     end
 
+    def unpublish_content
+      raise '123'
+    end
+
     private
 
     def client
