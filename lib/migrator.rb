@@ -14,7 +14,7 @@ class Migrator
   def self.migrate(models = {})
     Redirector.purge!
     models.each do |endpoint, class_name|
-      Exporter.get_entries(endpoint).first(10).each do |data|
+      Exporter.get_entries(endpoint).each do |data|
         obj = class_name.constantize.new(data)
         obj.transform!
         obj.import!
