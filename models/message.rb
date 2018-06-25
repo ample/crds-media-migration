@@ -1,7 +1,5 @@
 class Message < Transformer
 
-  @color = :white
-
   field_map title: 'title',
             slug: nil,
             description: 'description',

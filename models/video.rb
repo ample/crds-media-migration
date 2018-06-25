@@ -1,7 +1,5 @@
 class Video < Transformer
 
-  color = :pink
-
   field_map title: 'title',
             slug: nil,
             description: 'description',

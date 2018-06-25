@@ -45,6 +45,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     public_suffix (3.0.2)
+    rake (12.3.1)
     reverse_markdown (1.1.0)
       nokogiri
     thread_safe (0.3.6)
@@ -64,6 +65,7 @@ DEPENDENCIES
   httparty
   mime-types
   pry
+  rake
   reverse_markdown
 
 BUNDLED WITH

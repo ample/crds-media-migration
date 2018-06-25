@@ -20,13 +20,19 @@ class Importer
       asset = env.assets.create(title: title, file: image_file)
       asset.process_file
       asset.publish
+      Logger.write('.', :blue)
       sleep 0.15
       asset
     end
 
     def delete_drafts
-      env.entries.all.reject(&:published?).map { |e| e.destroy; sleep 0.15 }
-      env.assets.all.reject(&:published?).map { |e| e.destroy; sleep 0.15 }
+      %i[entries assets].each do |type|
+        env.send(type).all.reject(&:published?).each do |entry|
+          entry.destroy
+          Logger.write('.', :green)
+          sleep 0.15
+        end
+      end
     end
 
     private

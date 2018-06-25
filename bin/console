@@ -4,11 +4,12 @@ require 'contentful/management'
 require 'irb'
 require 'irb/completion'
 require 'pry'
+require 'fileutils'
 
 require_relative '../lib/migrator'
 
-# def go
-#   Migrator.migrate
-# end
+def reload!
+  load File.expand_path('../lib/migrator.rb', __dir__)
+end
 
 IRB.start

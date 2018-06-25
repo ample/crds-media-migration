@@ -20,7 +20,7 @@ class Logger
       end
 
       def colorize(str, color_code)
-        "\e[#{color_code}m#{str}\e[0m"
+        "\e[#{colors[color_code]}m#{str}\e[0m"
       end
   end
 
