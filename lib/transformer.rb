@@ -5,8 +5,12 @@ require_relative 'importer'
 
 class Transformer
 
+  @color = :white
+
   class << self
     attr_reader :fields
+
+    attr_accessor :color
 
     def field_map(map = {})
       (@fields = map.symbolize_keys).each do |k,v|
@@ -38,6 +42,7 @@ class Transformer
     transform! if importable_data.blank?
     entry = Importer.create_entry(content_type, importable_data)
     entry.publish
+    Logger.write('.', self.class.color)
     sleep 0.15
     entry
   end

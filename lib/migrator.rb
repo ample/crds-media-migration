@@ -1,5 +1,6 @@
 require_relative 'exporter'
 require_relative 'importer'
+require_relative 'logger'
 require_relative 'transformer'
 
 require_relative '../models/message'

@@ -3,6 +3,8 @@ require_relative 'video'
 
 class Series < Transformer
 
+  @color = :light_blue
+
   field_map title: 'title',
             slug: nil,
             image: nil,

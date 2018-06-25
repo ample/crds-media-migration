@@ -1,5 +1,7 @@
 class Song < Transformer
 
+  @color = :yellow
+
   field_map title: 'title',
             slug: nil,
             description: 'description',
