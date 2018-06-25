@@ -31,12 +31,17 @@ class Series < Transformer
   end
 
   def transformed_videos
-    ([create_trailer_video] + (@messages = create_messages)).sort_by { |x| x.fields[:published_at] }
+    ([create_trailer_video] + (@messages = create_messages)).reject(&:blank?).sort_by { |x| x.fields[:published_at] }
   end
 
   def import!
     series = super
     @messages.each { |msg| msg.update(series: series) }
+  end
+
+  def write_redirect!
+    return unless attributes[:id].present?
+    Redirector.write("/series/#{attributes[:id]}/*", "/series/#{importable_data[:slug]}")
   end
 
   private
@@ -51,6 +56,7 @@ class Series < Transformer
       published_at: importable_data[:published_at]
     )
     video.transform!
+    video.write_redirect!
     video.import!
   end
 
@@ -58,6 +64,9 @@ class Series < Transformer
     attributes[:messages].map do |message|
       message = Message.new(message)
       message.transform!
+      src = "/message/#{message.attributes[:id]}/*"
+      dest = "/series/#{importable_data[:slug]}/#{message.importable_data[:slug]}"
+      Redirector.write(src, dest)
       message.import!
     end
   end

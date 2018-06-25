@@ -33,4 +33,9 @@ class Song < Transformer
     DateTime.now
   end
 
+  def write_redirect!
+    return unless attributes[:id].present?
+    Redirector.write("/media/#{attributes[:id]}/*", "/songs/#{importable_data[:slug]}")
+  end
+
 end

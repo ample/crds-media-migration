@@ -39,4 +39,9 @@ class Video < Transformer
     attributes[:tags].collect { |t| t[:title] }.sort
   end
 
+  def write_redirect!
+    return unless attributes[:id].present?
+    Redirector.write("/media/#{attributes[:id]}/*", "/videos/#{importable_data[:slug]}")
+  end
+
 end

@@ -43,6 +43,10 @@ class Transformer
     entry
   end
 
+  def write_redirect!
+    false
+  end
+
   def html_to_markdown(html)
     ReverseMarkdown.convert(html)
   end
