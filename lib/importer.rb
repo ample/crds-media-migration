@@ -29,7 +29,7 @@ class Importer
 
     def delete_drafts
       %i[entries assets].each do |type|
-        env.send(type).all.reject(&:published?).each do |entry|
+        env.send(type).all(limit: 1000).reject(&:published?).each do |entry|
           entry.destroy
           Logger.write('.', :green)
           sleep 0.15
@@ -38,7 +38,8 @@ class Importer
     end
 
     def unpublish_content
-      collection = env.entries.all.to_a.reject { |e| e.fields[:title].blank? } + env.assets.all.to_a
+      collection = env.entries.all(limit: 1000).to_a.reject { |e| e.fields[:title].blank? } +
+                   env.assets.all(limit: 1000).to_a
       collection.select(&:published?).each do |obj|
         obj.unpublish
         Logger.write('.', :green)
