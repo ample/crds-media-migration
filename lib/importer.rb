@@ -56,7 +56,7 @@ class Importer
     end
 
     def publish_entries(content_type = nil)
-      scope = content_type.nil? ? env : content_types.find('migrations')
+      scope = content_type.nil? ? env : content_types.find(content_type)
       scope.entries.all(limit: 1000).to_a.reject(&:published?).each do |entry|
         entry.publish
         log_and_wait
