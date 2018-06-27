@@ -1,3 +1,4 @@
+require_relative 'error'
 require_relative 'exporter'
 require_relative 'importer'
 require_relative 'logger'

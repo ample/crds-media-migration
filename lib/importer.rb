@@ -11,8 +11,14 @@ class Importer
 
     def create_entry(content_type, data)
       content_type = content_types.find(content_type)
-      content_type.entries.create(data)
+      entry = content_type.entries.create(data)
+      if entry.is_a?(Contentful::Management::UnprocessableEntity)
+        Error.write(content_type: content_type, data: data, error: JSON.parse(entry.response.raw.body))
+        log_and_wait :red
+        return entry
+      end
       log_and_wait
+      entry
     end
 
     def create_asset(url)
@@ -22,6 +28,11 @@ class Importer
       image_file.properties[:upload] = url
       title = File.basename(url, '.*').titleize
       asset = env.assets.create(title: title, file: image_file)
+      if asset.is_a?(Contentful::Management::UnprocessableEntity)
+        Error.write(content_type: 'asset', data: { url: url }, error: JSON.parse(asset.response.raw.body))
+        log_and_wait :red
+        return asset
+      end
       log_and_wait :blue
       asset
     end
