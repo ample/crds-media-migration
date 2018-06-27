@@ -58,8 +58,7 @@ class Importer
     def publish_entries(content_type = nil)
       scope = content_type.nil? ? env : content_types.find(content_type)
       scope.entries.all(limit: 1000).to_a.reject(&:published?).each do |entry|
-        entry.publish
-        log_and_wait
+        publish_entry(entry)
       end
     end
 
@@ -123,6 +122,16 @@ class Importer
     def log_and_wait(color = :green)
       Logger.write('.', color)
       sleep 0.11
+    end
+
+    def publish_entry(entry)
+      pub = entry.publish
+      unless pub.is_a?(Contentful::Management::Entry)
+        return log_and_wait(:red) unless pub.message.include?('slug')
+        entry.update(slug: "#{entry.fields[:slug]}-#{entry.id}")
+        return publish_entry(entry)
+      end
+      log_and_wait
     end
   end
 
