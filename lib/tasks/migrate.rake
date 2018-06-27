@@ -25,16 +25,16 @@ task :publish_assets do
 end
 
 task :publish_videos do
-  Impoter.publish_entries('video')
+  Importer.publish_entries('video')
 end
 
 task :publish_series do
-  Impoter.publish_entries('message')
-  Impoter.publish_entries('series')
+  Importer.publish_entries('message')
+  Importer.publish_entries('series')
 end
 
 task :publish_music do
-  Impoter.publish_entries('song')
+  Importer.publish_entries('song')
 end
 
 # ---------------------------------------- | Unpublishing
@@ -68,4 +68,19 @@ end
 
 task :purge_redirects do
   Redirector.purge!
+end
+
+# ---------------------------------------- | Miscellaneous
+
+task :undo_pages_migration do
+  env = Importer.send(:env)
+  ct = env.content_types.find('migrations')
+  ct.entries.all.each do |entry|
+    next unless entry.fields[:version] == 20180614135537
+    entry.unpublish
+    entry.destroy
+  end
+  pages_ct = env.content_types.find('page')
+  pages_ct.deactivate
+  pages_ct.destroy
 end
