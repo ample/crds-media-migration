@@ -43,3 +43,10 @@ end
 task :delete_content_types do
   Importer.delete_content_types
 end
+
+# ---------------------------------------- | Migrations
+
+task :create_migration_records do
+  Importer.create_migration_records
+  Importer.publish_entries('migrations')
+end

@@ -12,6 +12,7 @@ class Importer
     def create_entry(content_type, data)
       content_type = content_types.find(content_type)
       content_type.entries.create(data)
+      log_and_wait
     end
 
     def create_asset(url)
@@ -40,6 +41,14 @@ class Importer
       env.assets.all(limit: 1000).to_a.reject(&:published?).each do |asset|
         asset.publish
         log_and_wait :blue
+      end
+    end
+
+    def publish_entries(content_type = nil)
+      scope = content_type.nil? ? env : content_types.find('migrations')
+      scope.entries.all(limit: 1000).to_a.reject(&:published?).each do |entry|
+        entry.publish
+        log_and_wait
       end
     end
 
@@ -77,6 +86,13 @@ class Importer
         content_type.destroy
         log_and_wait
       end
+    end
+
+    # ---------------------------------------- | Migrations
+
+    def create_migration_records
+      return false if content_types.find('migrations').entries.all.size > 0
+      8.times { |idx| create_entry(:migrations, version: "2018061400000#{idx}".to_i) }
     end
 
     private
