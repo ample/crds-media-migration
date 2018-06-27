@@ -29,6 +29,7 @@ task :publish_videos do
 end
 
 task :publish_series do
+  Importer.publish_entries('video')
   Importer.publish_entries('message')
   Importer.publish_entries('series')
 end
