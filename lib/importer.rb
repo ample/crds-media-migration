@@ -46,13 +46,11 @@ class Importer
     # ---------------------------------------- | Unpublishing
 
     def unpublish_content
-      env.entries.all(limit: 1000).to_a.reject { |e| e.fields[:title].blank? }.each do |entry|
-        entry.unpublish
-        log_and_wait
-      end
-      env.assets.all(limit: 1000).to_a.each do |asset|
-        asset.unpublish
-        log_and_wait :blue
+      %i[entries assets].each do |type|
+        env.send(type).all(limit: 1000).select(&:published?).each do |obj|
+          obj.unpublish
+          log_and_wait(type == :assets ? :blue : :green)
+        end
       end
     end
 
@@ -60,10 +58,24 @@ class Importer
 
     def delete_drafts
       %i[entries assets].each do |type|
-        env.send(type).all(limit: 1000).reject(&:published?).each do |entry|
-          entry.destroy
+        env.send(type).all(limit: 1000).reject(&:published?).each do |obj|
+          obj.destroy
           log_and_wait(type == :assets ? :blue : :green)
         end
+      end
+    end
+
+    def deactivate_content_types
+      content_types.all.to_a.each do |content_type|
+        content_type.deactivate
+        log_and_wait
+      end
+    end
+
+    def delete_content_types
+      content_types.all.to_a.each do |content_type|
+        content_type.destroy
+        log_and_wait
       end
     end
 

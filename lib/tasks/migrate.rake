@@ -30,8 +30,16 @@ task :unpublish_content do
   Importer.unpublish_content
 end
 
+task :deactivate_content_types do
+  Importer.deactivate_content_types
+end
+
 # ---------------------------------------- | Deleting
 
 task :delete_drafts do
   Importer.delete_drafts
+end
+
+task :delete_content_types do
+  Importer.delete_content_types
 end
