@@ -12,7 +12,6 @@ require_relative '../models/video'
 class Migrator
 
   def self.migrate(models = {})
-    Redirector.purge!
     models.each do |endpoint, class_name|
       Exporter.get_entries(endpoint).each do |data|
         obj = class_name.constantize.new(data)

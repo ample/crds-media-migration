@@ -24,6 +24,19 @@ task :publish_assets do
   Importer.publish_assets
 end
 
+task :publish_videos do
+  Impoter.publish_entries('video')
+end
+
+task :publish_series do
+  Impoter.publish_entries('message')
+  Impoter.publish_entries('series')
+end
+
+task :publish_music do
+  Impoter.publish_entries('song')
+end
+
 # ---------------------------------------- | Unpublishing
 
 task :unpublish_content do
@@ -49,4 +62,10 @@ end
 task :create_migration_records do
   Importer.create_migration_records
   Importer.publish_entries('migrations')
+end
+
+# ---------------------------------------- | Redirects
+
+task :purge_redirects do
+  Redirector.purge!
 end
