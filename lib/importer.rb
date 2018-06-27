@@ -12,7 +12,7 @@ class Importer
     def create_entry(content_type, data)
       content_type = content_types.find(content_type)
       entry = content_type.entries.create(data)
-      if entry.is_a?(Contentful::Management::UnprocessableEntity)
+      unless entry.is_a?(Contentful::Management::DynamicEntry)
         Error.write(content_type: content_type, data: data, error: JSON.parse(entry.response.raw.body))
         log_and_wait :red
         return entry
@@ -28,7 +28,7 @@ class Importer
       image_file.properties[:upload] = url
       title = File.basename(url, '.*').titleize
       asset = env.assets.create(title: title, file: image_file)
-      if asset.is_a?(Contentful::Management::UnprocessableEntity)
+      unless asset.is_a?(Contentful::Management::Asset)
         Error.write(content_type: 'asset', data: { url: url }, error: JSON.parse(asset.response.raw.body))
         log_and_wait :red
         return asset
@@ -103,7 +103,7 @@ class Importer
 
     def create_migration_records
       return false if content_types.find('migrations').entries.all.size > 0
-      8.times { |idx| create_entry(:migrations, version: "2018061400000#{idx}".to_i) }
+      6.times { |idx| create_entry(:migrations, version: "2018061400000#{idx}".to_i) }
     end
 
     private
