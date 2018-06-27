@@ -1,3 +1,7 @@
 .env
 .envrc
 tmp/
+
+# Contentful CLI
+contentful-import-*
+contentful-export-*
