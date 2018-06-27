@@ -5,8 +5,7 @@ class Video < Transformer
             description: 'description',
             image: nil,
             source_url: 'source_url',
-            published_at: nil,
-            tags: nil
+            published_at: nil
 
   def transformed_slug
     attributes[:title].parameterize
@@ -32,11 +31,6 @@ class Video < Transformer
     return attributes[:published_at] if attributes[:published_at].present?
     return DateTime.parse(attributes[:created]) if attributes[:created].present?
     DateTime.now
-  end
-
-  def transformed_tags
-    return [] unless attributes[:tags].present?
-    attributes[:tags].collect { |t| t[:title] }.sort
   end
 
   def write_redirect!
