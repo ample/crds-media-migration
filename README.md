@@ -25,20 +25,25 @@ Migration Process
 
 4. Delete Song and Video content models (manually).
 
-5. Create migration records:
-
-        $ cd ../crds-media-migration
-        $ bundle exec rake create_migration_records
-
-6. Check contentful migrations and then run them: (The content types may have to be manually saved after running this command.)
+5. Check contentful migrations, then create migration records:
 
         $ cd ../crds-contentful-migrations
         $ bundle exec rake contentful_migrations:pending
+        $ cd path/to/crds-media-migration
+        $ bundle exec rake create_migration_records
+
+6. Run migrations: (The content types may have to be manually saved after running this command.)
+
+        $ cd ../crds-contentful-migrations
         $ bundle exec rake contentful_migrations:migrate
+
+    Then, make sure series can add Message and Video content types to its `video` field.
 
 7. Delete pages:
 
         $ bundle exec rake undo_pages_migration
+
+    And then manually save the new content types.
 
 8. Remove redirects file:
 
