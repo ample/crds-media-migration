@@ -9,19 +9,8 @@ class Importer
 
     # ---------------------------------------- | Creating
 
-    def create_entry(content_type, data)
-      content_type = content_types.find(content_type)
-      entry = content_type.entries.create(data)
-      unless entry.is_a?(Contentful::Management::DynamicEntry)
-        Error.write(content_type: content_type, data: data, error: JSON.parse(entry.response.raw.body))
-        log_and_wait :red
-        return entry
-      end
-      log_and_wait
-      entry
-    end
-
     def create_asset(url)
+      return nil if url.nil?
       image_file = Contentful::Management::File.new
       image_file.properties[:contentType] = MIME::Types.type_for(url).first.try(:to_s)
       image_file.properties[:fileName] = File.basename(url)
@@ -35,6 +24,18 @@ class Importer
       end
       log_and_wait :blue
       asset
+    end
+
+    def create_entry(content_type, data)
+      content_type = content_types.find(content_type)
+      entry = content_type.entries.create(data)
+      unless entry.is_a?(Contentful::Management::DynamicEntry)
+        Error.write(content_type: content_type, data: data, error: JSON.parse(entry.response.raw.body))
+        log_and_wait :red
+        return entry
+      end
+      log_and_wait
+      entry
     end
 
     # ---------------------------------------- | Processing
@@ -70,6 +71,14 @@ class Importer
           obj.unpublish
           log_and_wait(type == :assets ? :blue : :green)
         end
+      end
+    end
+
+    def unpublish_entries(content_type = nil)
+      scope = content_type.nil? ? env : content_types.find(content_type)
+      scope.entries.all(limit: 1000).select(&:published?).each do |entry|
+        entry.unpublish
+        log_and_wait
       end
     end
 
