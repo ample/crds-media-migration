@@ -14,10 +14,10 @@ Migration Process
 2. Delete _everything_ (including content models) from space:
 
         $ cd path/to/crds-media-migration
-        $ bundle exec unpublish_content
-        $ bundle exec delete_drafts
-        $ bundle exec deactivate_content_types
-        $ bundle exec delete_content_types
+        $ bundle exec rake unpublish_content
+        $ bundle exec rake delete_drafts
+        $ bundle exec rake deactivate_content_types
+        $ bundle exec rake delete_content_types
 
 3. Import data:
 
@@ -28,7 +28,7 @@ Migration Process
 5. Create migration records:
 
         $ cd ../crds-media-migration
-        $ bundle exec create_migration_records
+        $ bundle exec rake create_migration_records
 
 6. Check contentful migrations and then run them: (The content types may have to be manually saved after running this command.)
 
