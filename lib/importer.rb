@@ -41,25 +41,50 @@ class Importer
     # ---------------------------------------- | Processing
 
     def process_assets
-      env.assets.all(limit: 1000).to_a.reject(&:published?).each do |asset|
-        asset.process_file
-        log_and_wait :blue
+      page_1 = env.assets.all(limit: 1000)
+      page_2 = page_1.next_page
+      page_3 = page_2.next_page
+      [page_1, page_2, page_3].each do |page|
+        page.to_a.reject(&:published?).each do |asset|
+          pub = asset.process_file
+          unless pub.is_a?(Contentful::Management::Asset)
+            Error.write(content_type: 'asset', data: {}, error: JSON.parse(pub.response.raw.body))
+            log_and_wait :red
+            next
+          end
+          log_and_wait :blue
+        end
       end
     end
 
     # ---------------------------------------- | Publishing
 
     def publish_assets
-      env.assets.all(limit: 1000).to_a.reject(&:published?).each do |asset|
-        asset.publish
-        log_and_wait :blue
+      page_1 = env.assets.all(limit: 1000)
+      page_2 = page_1.next_page
+      page_3 = page_2.next_page
+      [page_1, page_2, page_3].each do |page|
+        page.to_a.reject(&:published?).each do |asset|
+          pub = asset.publish
+          unless pub.is_a?(Contentful::Management::Asset)
+            Error.write(content_type: 'asset', data: {}, error: JSON.parse(pub.response.raw.body))
+            log_and_wait :red
+            next
+          end
+          log_and_wait :blue
+        end
       end
     end
 
     def publish_entries(content_type = nil)
       scope = content_type.nil? ? env : content_types.find(content_type)
-      scope.entries.all(limit: 1000).to_a.reject(&:published?).each do |entry|
-        publish_entry(entry)
+      page_1 = scope.entries.all(limit: 1000)
+      page_2 = page_1.next_page
+      page_3 = page_2.next_page
+      [page_1, page_2, page_3].each do |page|
+        page.to_a.reject(&:published?).each do |entry|
+          publish_entry(entry)
+        end
       end
     end
 
