@@ -34,11 +34,6 @@ class Series < Transformer
     ([create_trailer_video] + (@messages = create_messages)).reject(&:blank?).sort_by { |x| x.fields[:published_at] }
   end
 
-  def import!
-    series = super
-    @messages.each { |msg| msg.update(series: series) }
-  end
-
   def write_redirect!
     return unless attributes[:id].present?
     Redirector.write("/series/#{attributes[:id]}/*", "/series/#{importable_data[:slug]}")
