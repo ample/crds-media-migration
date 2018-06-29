@@ -9,7 +9,7 @@ Migration Process
 
 1. Export crds-media-prod:
 
-        $ contentful space export --space-id y3a9myzsdjan --management-token $CONTENTFUL_MANAGEMENT_ACCESS_TOKEN
+        $ contentful space export --space-id $CONTENTFUL_SPACE_ID --management-token $CONTENTFUL_MANAGEMENT_ACCESS_TOKEN
 
 2. Delete _everything_ (including content models) from space:
 
@@ -21,7 +21,7 @@ Migration Process
 
 3. Import data:
 
-        $ contentful space import --space-id 7yxzjki8tjkc --content-file tmp/contentful-export-y3a9myzsdjan-master-2018-06-27T13-42-84.json --management-token $CONTENTFUL_MANAGEMENT_ACCESS_TOKEN
+        $ contentful space import --space-id $CONTENTFUL_SPACE_ID --content-file tmp/contentful-export-y3a9myzsdjan-master-2018-06-27T13-42-84.json --management-token $CONTENTFUL_MANAGEMENT_ACCESS_TOKEN
 
 4. Delete Song and Video content models (manually).
 
