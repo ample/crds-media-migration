@@ -92,9 +92,14 @@ class Importer
 
     def unpublish_content
       %i[entries assets].each do |type|
-        env.send(type).all(limit: 1000).select(&:published?).each do |obj|
-          obj.unpublish
-          log_and_wait(type == :assets ? :blue : :green)
+        page_1 = env.send(type).all(limit: 1000)
+        page_2 = page_1.next_page
+        page_3 = page_2.next_page
+        [page_1, page_2, page_3].each do |page|
+          page.select(&:published?).each do |obj|
+            obj.unpublish
+            log_and_wait(type == :assets ? :blue : :green)
+          end
         end
       end
     end
