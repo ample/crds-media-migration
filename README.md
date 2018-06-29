@@ -41,6 +41,7 @@ Migration Process
 
 7. Delete pages:
 
+        $ cd path/to/crds-media-migration
         $ bundle exec rake undo_pages_migration
 
     And then manually save the new content types.
