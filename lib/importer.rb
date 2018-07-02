@@ -167,7 +167,10 @@ class Importer
       pub = entry.publish
       unless pub.is_a?(Contentful::Management::Entry)
         return log_and_wait(:red) unless pub.message.include?('slug')
-        entry.update(slug: "#{entry.fields[:slug]}-#{entry.id}")
+        entry.fetch_content_type rescue nil
+        slug = "#{entry.fields[:slug]}-#{entry.id}"
+        entry.update(slug: slug)
+        Redirector.write('[UNKNOWN]', "#{entry.content_type.name}: #{slug}")
         return publish_entry(entry)
       end
       log_and_wait
