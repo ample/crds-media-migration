@@ -39,6 +39,7 @@ GEM
     minitest (5.11.3)
     multi_json (1.13.1)
     multi_xml (0.6.0)
+    netrc (0.11.0)
     nokogiri (1.8.3)
       mini_portile2 (~> 2.3.0)
     pry (0.11.3)
@@ -46,6 +47,10 @@ GEM
       method_source (~> 0.9.0)
     public_suffix (3.0.2)
     rake (12.3.1)
+    rest-client (2.0.2)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     reverse_markdown (1.1.0)
       nokogiri
     thread_safe (0.3.6)
@@ -66,6 +71,7 @@ DEPENDENCIES
   mime-types
   pry
   rake
+  rest-client
   reverse_markdown
 
 BUNDLED WITH

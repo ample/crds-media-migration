@@ -7,6 +7,7 @@ require 'pry'
 require 'fileutils'
 
 require_relative '../lib/migrator'
+require_relative '../lib/youtube'
 
 def reload!
   root_dir = File.expand_path('..', __dir__)
