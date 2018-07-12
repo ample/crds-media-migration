@@ -28,24 +28,15 @@ class Youtube
           channelId: channel_id,
           part: 'snippet,id',
           maxResults: 50,
-          order: 'date'
+          order: 'date',
+          publishedAfter: '2017-07-01T00:00:00Z'
         }
         params[:pageToken] = options[:page_token] if options[:page_token]
-        params[:publishedBefore] = options[:published_before] if options[:published_before]
         res = RestClient.get('https://www.googleapis.com/youtube/v3/search', params: params)
         body = JSON.parse(res.body)
         Logger.write("Adding #{body['items'].size} videos from channel #{channel_id}.\n")
         self.videos.concat(body['items'])
-        if options[:published_before].nil? && body['items'].size == 0
-          publish_date = options[:last_video]['snippet']['publishedAt']
-          Logger.write("--- Videos before by #{publish_date} ---\n")
-          binding.pry
-          videos_in_channel(channel_id, published_before: publish_date)
-          # %w{date rating relevance title videoCount viewCount}.each do |order_method|
-          #   Logger.write("--- Ordering by #{order_method} ---\n")
-          #   videos_in_channel(channel_id, nil, order_method)
-          # end
-        elsif body['nextPageToken'] && body['items'].size > 0
+        if body['nextPageToken'] && body['items'].size > 0
           Logger.write("Fetching next page: #{body['nextPageToken']} ...\n")
           return videos_in_channel(
             channel_id,
