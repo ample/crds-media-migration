@@ -6,6 +6,7 @@
 
 require 'rest-client'
 require_relative 'logger'
+require_relative 'importer'
 
 class Youtube
 
@@ -18,6 +19,23 @@ class Youtube
         videos_in_channel(channel_id)
       end
       write_videos
+    end
+
+    def import_videos
+      self.videos = JSON.parse(File.read(video_file_path))
+      videos.each do |video|
+        still = Importer.create_asset(video['snippet']['thumbnails']['high']['url'], video['snippet']['title'])
+        entry = Video.new(
+          title: video['snippet']['title'],
+          description: video['snippet']['description'],
+          source_url: "https://www.youtube.com/watch?v=#{video['id']['videoId']}",
+          published_at: DateTime.parse(video['snippet']['publishedAt']),
+          still: still
+        )
+        entry.import!
+      end
+      Importer.process_assets
+      Importer.publish_assets
     end
 
     private
@@ -38,20 +56,18 @@ class Youtube
         self.videos.concat(body['items'])
         if body['nextPageToken'] && body['items'].size > 0
           Logger.write("Fetching next page: #{body['nextPageToken']} ...\n")
-          return videos_in_channel(
-            channel_id,
-            page_token: body['nextPageToken'],
-            published_before: options[:published_before],
-            last_video: body['items'].last
-          )
+          return videos_in_channel(channel_id, page_token: body['nextPageToken'])
         end
         videos
       end
 
+      def video_file_path
+        File.expand_path('../tmp/youtube-videos.json', __dir__)
+      end
+
       def write_videos
-        file_path = File.expand_path('../tmp/youtube-videos.json', __dir__)
         videos.uniq!
-        File.open(file_path, 'w+') { |f| f.write(videos.to_json) }
+        File.open(video_file_path, 'w+') { |f| f.write(videos.to_json) }
         videos
       end
   end

@@ -9,13 +9,13 @@ class Importer
 
     # ---------------------------------------- | Creating
 
-    def create_asset(url)
+    def create_asset(url, title = nil)
       return nil if url.nil?
       image_file = Contentful::Management::File.new
       image_file.properties[:contentType] = MIME::Types.type_for(url).first.try(:to_s)
       image_file.properties[:fileName] = File.basename(url)
       image_file.properties[:upload] = url
-      title = File.basename(url, '.*').titleize
+      title = File.basename(url, '.*').titleize if title.nil?
       asset = env.assets.create(title: title, file: image_file)
       unless asset.is_a?(Contentful::Management::Asset)
         Error.write(content_type: 'asset', data: { url: url }, error: JSON.parse(asset.response.raw.body))
