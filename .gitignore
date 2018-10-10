@@ -3,5 +3,5 @@
 tmp/
 
 # Contentful CLI
-contentful-import-*
-contentful-export-*
+contentful-import*
+contentful-export*
