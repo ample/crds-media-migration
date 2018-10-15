@@ -5,13 +5,13 @@ require_relative 'logger'
 
 class MessageAssetMigrator
 
-  attr_accessor :cf_messages, :ss_messages, :cf_assets, :cf_errors
+  attr_accessor :cf_messages, :ss_messages, :cf_assets, :cf_entries, :cf_errors
 
   def run!
     fetch_ss_messages
     fetch_cf_messages
     import_media_files
-    publish_cf_assets
+    publish_content
     true
   end
 
@@ -39,7 +39,9 @@ class MessageAssetMigrator
     end
 
     def import_media_files
-      cf_assets ||= []
+      @cf_assets ||= []
+      @cf_entries ||= []
+      @cf_errors ||= []
       ss_messages.each do |ss_msg|
         video_url = ss_msg.dig('messageVideo', 'source', 'filename')
         audio_url = ss_msg.dig('messageAudio', 'source', 'filename')
@@ -51,7 +53,7 @@ class MessageAssetMigrator
           if video_file = create_asset(video_url)
             video_file.process_file
             cf_msg.video_file = video_file
-            cf_assets << video_file
+            @cf_assets << video_file
           else
             @cf_errors << video_url
           end
@@ -60,22 +62,27 @@ class MessageAssetMigrator
           if audio_file = create_asset(audio_url)
             audio_file.process_file
             cf_msg.audio_file = audio_file
-            cf_assets << audio_file
+            @cf_assets << audio_file
           else
             @cf_errors << audio_url
           end
         end
         cf_msg.save
-        cf_msg.publish
+        @cf_entries << cf_msg
         log_and_wait
       end
     end
 
-    def publish_cf_assets
-      cf_assets.map { |a| a.publish }
+    def publish_content
+      cf_assets.map { |a| a.publish; log_and_wait(:blue) }
+      cf_entries.map { |a| a.publish; log_and_wait(:green) }
     end
 
-    def create_asset(url)
+    def delete_assets
+      cf_assets.map { |a| a.destroy; log_and_wait(:blue) }
+    end
+
+    def create_asset(url, attempt = 0)
       return nil if url.nil?
       image_file = Contentful::Management::File.new
       image_file.properties[:contentType] = MIME::Types.type_for(url).first.try(:to_s)
@@ -84,11 +91,17 @@ class MessageAssetMigrator
       title = File.basename(url, '.*').titleize if title.nil?
       asset = contentful.assets.create(title: title, file: image_file)
       unless asset.is_a?(Contentful::Management::Asset)
-        puts "Error creating asset: #{url}"
-        log_and_wait(:red)
-        return nil
+        if attempt > 0
+          puts "\nError creating asset: #{url}"
+          log_and_wait(:red)
+          return nil
+        else
+          puts "\nError creating asset: #{url} | Trying again ..."
+          sleep 1
+          return create_asset(url, attempt + 1)
+        end
       end
-      log_and_wait
+      log_and_wait(:blue)
       asset
     end
 
